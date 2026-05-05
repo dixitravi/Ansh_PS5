@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PS5 Mission: Spidey Saving Quest</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ps-blue: #003791;
+            --spidey-red: #d12d33;
+            --glass-bg: rgba(15, 15, 15, 0.85);
+        }
+
+        body {
+            background: black url('./images/bg.png') no-repeat center center fixed;
+            background-size: cover;
+            color: #fff;
+            font-family: 'Montserrat', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 0, 0, 0.7); 
+            z-index: -1;
+        }
+
+        h1 { 
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            text-shadow: 0 0 15px var(--spidey-red);
+            text-align: center;
+            margin-bottom: 20px;
+            letter-spacing: 4px;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 20px;
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+
+        .stats-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: #ccc;
+            margin-bottom: 5px;
+        }
+
+        .current-saved {
+            font-size: 2.8rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 0 15px var(--spidey-red);
+            transition: transform 0.2s ease;
+        }
+
+        .pulse { transform: scale(1.05); color: #4caf50; }
+
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-top: 15px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.75rem;
+            color: #aaa;
+        }
+
+        .progress-container {
+            background: rgba(255,255,255,0.1);
+            height: 14px;
+            border-radius: 7px;
+            margin: 8px 0 15px 0;
+            overflow: hidden;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        #progress-bar {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #8b0000, var(--spidey-red), #ff5f5f);
+            box-shadow: 0 0 15px var(--spidey-red);
+            transition: width 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+        }
+
+        .progress-footer {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-family: 'Orbitron';
+            color: #888;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            box-sizing: border-box;
+            background: rgba(255,255,255,0.95);
+            border: none;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+            font-weight: bold;
+            color: #000;
+        }
+
+        .action-btn {
+            width: 100%;
+            background: var(--spidey-red);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #8b0000;
+            margin-bottom: 10px;
+        }
+
+        .action-btn.secondary {
+            background: #444;
+            box-shadow: 0 4px 0 #222;
+        }
+
+        .action-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8b0000; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0; top: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            border: 2px solid var(--spidey-red);
+            padding: 30px;
+            border-radius: 20px;
+            text-align: center;
+            width: 320px;
+        }
+
+        .log-container { max-height: 220px; overflow-y: auto; }
+        .log-item { 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 12px 5px; 
+            border-bottom: 1px solid rgba(255,255,255,0.05); 
+            font-size: 0.85rem; 
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .log-item:hover { background: rgba(255,255,255,0.05); }
+        .log-date { color: #888; font-size: 0.75rem; }
+    </style>
+</head>
+<body>
+
+    <h1>MISSION: PS5</h1>
+
+    <div class="glass-panel">
+        <div class="stats-label">COLLECTED CURRENCY</div>
+        <div class="current-saved" id="total-display">₹0</div>
+        
+        <div class="progress-header">
+            <div id="goal-display-label">GOAL: ₹50,000</div>
+            <div id="percent-text">0% COMPLETE</div>
+        </div>
+
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+        </div>
+
+        <div class="progress-footer">
+            <span id="balance-left">BALANCE LEFT: ₹50,000</span>
+        </div>
+    </div>
+
+    <div class="glass-panel">
+        <div class="stats-label">MANUAL ENTRY</div>
+        <input type="number" id="save-amount" placeholder="Enter Amount" inputmode="numeric">
+        <button class="action-btn" onclick="addMoney()">DEPOSIT TO PIGGY BANK</button>
+    </div>
+
+    <div class="glass-panel log-container" id="history-log">
+        <div class="stats-label">MISSION HISTORY (CLICK TO EDIT)</div>
+    </div>
+
+    <!-- Goal Modal -->
+    <div id="goalModal" class="modal">
+        <div class="modal-content">
+            <div class="stats-label">RECONFIGURE TARGET</div>
+            <input type="number" id="new-goal-input" placeholder="New Goal Amount">
+            <button class="action-btn" onclick="updateGoal()">UPDATE MISSION</button>
+            <p style="font-size: 0.7rem; color: #666;">Press ESC to cancel</p>
+        </div>
+    </div>
+
+    <!-- Entry Edit Modal -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="stats-label">EDIT ENTRY</div>
+            <input type="number" id="edit-amount-input">
+            <button class="action-btn" onclick="saveEdit()">SAVE CHANGES</button>
+            <button class="action-btn secondary" onclick="deleteEntry()">DELETE ENTRY</button>
+            <p style="font-size: 0.7rem; color: #666;">Press ESC to cancel</p>
+        </div>
+    </div>
+
+    <script>
+        let totalSaved = 0;
+        let goal = parseFloat(localStorage.getItem('ps5_goal')) || 50000;
+        let editingIndex = -1;
+
+        const inputField = document.getElementById('save-amount');
+        const goalModal = document.getElementById('goalModal');
+        const editModal = document.getElementById('editModal');
+
+        function updateUI() {
+            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+            totalSaved = history.reduce((sum, item) => sum + item.amount, 0);
+            localStorage.setItem('ps5_saved', totalSaved);
+
+            const display = document.getElementById('total-display');
+            display.innerText = `₹${totalSaved.toLocaleString('en-IN')}`;
+            
+            const percentage = Math.min((totalSaved / goal) * 100, 100);
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('percent-text').innerText = `${Math.floor(percentage)}% COMPLETE`;
+            
+            document.getElementById('goal-display-label').innerText = `GOAL: ₹${goal.toLocaleString('en-IN')}`;
+            const balance = Math.max(goal - totalSaved, 0);
+            document.getElementById('balance-left').innerText = `BALANCE LEFT: ₹${balance.toLocaleString('en-IN')}`;
+            
+            renderHistory(history);
+            inputField.focus(); 
+        }
+
+        function addMoney() {
+            const amount = parseFloat(inputField.value);
+            if (amount > 0) {
+                const now = new Date();
+                const timestamp = `${now.toLocaleDateString('en-IN')} | ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
+                
+                let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+                history.unshift({ amount, timestamp });
+                
+                localStorage.setItem('ps5_history', JSON.stringify(history));
+                
+                document.getElementById('total-display').classList.add('pulse');
+                setTimeout(() => document.getElementById('total-display').classList.remove('pulse'), 400);
+
+                inputField.value = '';
+                updateUI();
+            }
+        }
+
+        function openEditModal(index) {
+            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+            editingIndex = index;
+            document.getElementById('edit-amount-input').value = history[index].amount;
+            editModal.style.display = "flex";
+            document.getElementById('edit-amount-input').focus();
+        }
+
+        function saveEdit() {
+            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+            const newAmount = parseFloat(document.getElementById('edit-amount-input').value);
+            if (newAmount >= 0) {
+                history[editingIndex].amount = newAmount;
+                localStorage.setItem('ps5_history', JSON.stringify(history));
+                editModal.style.display = "none";
+                updateUI();
+            }
+        }
+
+        function deleteEntry() {
+            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+            history.splice(editingIndex, 1);
+            localStorage.setItem('ps5_history', JSON.stringify(history));
+            editModal.style.display = "none";
+            updateUI();
+        }
+
+        function updateGoal() {
+            const val = parseFloat(document.getElementById('new-goal-input').value);
+            if (val > 0) {
+                goal = val;
+                localStorage.setItem('ps5_goal', goal);
+                goalModal.style.display = "none";
+                updateUI();
+            }
+        }
+
+        function renderHistory(history) {
+            const log = document.getElementById('history-log');
+            log.innerHTML = '<div class="stats-label">MISSION HISTORY (CLICK TO EDIT)</div>';
+            if (history.length === 0) log.innerHTML += '<div style="color:#666; font-size:0.8rem; padding-top:10px;">Waiting for first deposit...</div>';
+            
+            history.forEach((item, index) => {
+                log.innerHTML += `
+                    <div class="log-item" onclick="openEditModal(${index})">
+                        <div class="log-date">${item.timestamp}</div>
+                        <span style="color: #4caf50; font-weight:bold;">₹${item.amount.toLocaleString('en-IN')}</span>
+                    </div>`;
+            });
+        }
+
+        window.onload = () => { updateUI(); inputField.focus(); };
+
+        inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") addMoney(); });
+
+        window.addEventListener("keydown", (e) => {
+            if (e.ctrlKey && e.altKey && e.code === "KeyT") {
+                e.preventDefault();
+                goalModal.style.display = "flex";
+                document.getElementById('new-goal-input').focus();
+            }
+            if (e.key === "Escape") {
+                goalModal.style.display = "none";
+                editModal.style.display = "none";
+                inputField.focus();
+            }
+        });
+    </script>
+</body>
+</html>
