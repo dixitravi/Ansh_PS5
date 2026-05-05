@@ -68,112 +68,72 @@
             font-weight: bold;
             color: white;
             text-shadow: 0 0 15px var(--spidey-red);
-            transition: transform 0.2s ease;
         }
 
-        .pulse { transform: scale(1.05); color: #4caf50; }
-
         .progress-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-end;
-            margin-top: 15px;
-            font-family: 'Orbitron', sans-serif;
-            font-size: 0.75rem;
-            color: #aaa;
+            display: flex; justify-content: space-between; align-items: flex-end;
+            margin-top: 15px; font-family: 'Orbitron', sans-serif; font-size: 0.75rem; color: #aaa;
         }
 
         .progress-container {
-            background: rgba(255,255,255,0.1);
-            height: 14px;
-            border-radius: 7px;
-            margin: 8px 0 15px 0;
-            overflow: hidden;
-            border: 1px solid rgba(255,255,255,0.2);
+            background: rgba(255,255,255,0.1); height: 14px; border-radius: 7px;
+            margin: 8px 0 15px 0; overflow: hidden; border: 1px solid rgba(255,255,255,0.2);
         }
 
         #progress-bar {
-            height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #8b0000, var(--spidey-red), #ff5f5f);
-            box-shadow: 0 0 15px var(--spidey-red);
-            transition: width 1.2s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+            height: 100%; width: 0%; background: linear-gradient(90deg, #8b0000, var(--spidey-red), #ff5f5f);
+            box-shadow: 0 0 15px var(--spidey-red); transition: width 1.2s ease-in-out;
         }
 
-        .progress-footer {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            font-family: 'Orbitron';
-            color: #888;
-        }
+        .progress-footer { display: flex; justify-content: space-between; font-size: 0.75rem; font-family: 'Orbitron'; color: #888; }
 
         input[type="number"] {
-            width: 100%;
-            box-sizing: border-box;
-            background: rgba(255,255,255,0.95);
-            border: none;
-            padding: 15px;
-            border-radius: 10px;
-            font-size: 1.3rem;
-            margin-bottom: 15px;
-            text-align: center;
-            font-weight: bold;
-            color: #000;
+            width: 100%; box-sizing: border-box; background: rgba(255,255,255,0.95);
+            border: none; padding: 15px; border-radius: 10px; font-size: 1.3rem;
+            margin-bottom: 15px; text-align: center; font-weight: bold; color: #000;
         }
 
         .action-btn {
-            width: 100%;
-            background: var(--spidey-red);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 10px;
-            font-family: 'Orbitron', sans-serif;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #8b0000;
-            margin-bottom: 10px;
+            width: 100%; background: var(--spidey-red); color: white; border: none;
+            padding: 18px; border-radius: 10px; font-family: 'Orbitron', sans-serif;
+            font-weight: bold; cursor: pointer; box-shadow: 0 4px 0 #8b0000; margin-bottom: 10px;
         }
 
-        .action-btn.secondary {
-            background: #444;
-            box-shadow: 0 4px 0 #222;
-        }
-
+        .action-btn.secondary { background: #444; box-shadow: 0 4px 0 #222; }
         .action-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8b0000; }
 
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 100;
-            left: 0; top: 0; width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-        }
+        .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .title-group { display: flex; align-items: center; gap: 10px; }
+        .view-icons span { cursor: pointer; font-size: 1.2rem; margin-left: 10px; opacity: 0.5; transition: 0.3s; }
+        .view-icons span.active { opacity: 1; color: var(--spidey-red); text-shadow: 0 0 5px var(--spidey-red); }
 
-        .modal-content {
-            background: var(--glass-bg);
-            border: 2px solid var(--spidey-red);
-            padding: 30px;
-            border-radius: 20px;
-            text-align: center;
-            width: 320px;
-        }
+        .today-btn { cursor: pointer; font-size: 1.1rem; filter: grayscale(1); transition: 0.2s; }
+        .today-btn:hover { filter: grayscale(0); transform: scale(1.1); }
 
-        .log-container { max-height: 220px; overflow-y: auto; }
-        .log-item { 
-            display: flex; 
-            justify-content: space-between; 
-            padding: 12px 5px; 
-            border-bottom: 1px solid rgba(255,255,255,0.05); 
-            font-size: 0.85rem; 
-            cursor: pointer;
-            transition: background 0.2s;
+        /* CALENDAR CSS */
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-family: 'Orbitron'; font-size: 0.8rem; }
+        .nav-btn { cursor: pointer; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px; }
+        .nav-btn.disabled { opacity: 0.15; cursor: not-allowed; }
+        
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
+        .day-name { font-size: 0.6rem; color: var(--spidey-red); font-weight: bold; padding-bottom: 5px; }
+        .day-cell { 
+            background: rgba(255,255,255,0.05); aspect-ratio: 1/1; border-radius: 4px; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.7rem; 
+            border: 1px solid transparent; cursor: pointer;
         }
-        .log-item:hover { background: rgba(255,255,255,0.05); }
-        .log-date { color: #888; font-size: 0.75rem; }
+        .day-cell:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
+        .day-cell.has-data { border-color: rgba(76, 175, 80, 0.4); background: rgba(76, 175, 80, 0.1); }
+        .day-cell.has-data:hover { background: rgba(76, 175, 80, 0.2); }
+        .day-cell .amount { font-size: 0.5rem; color: #4caf50; font-weight: bold; margin-top: 2px; }
+
+        .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
+        .modal-content { background: var(--glass-bg); border: 2px solid var(--spidey-red); padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 350px; }
+
+        .log-container { max-height: 250px; overflow-y: auto; scrollbar-width: thin; }
+        .log-item { display: flex; justify-content: space-between; padding: 12px 5px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; cursor: pointer; }
+        
+        #day-entries-list { text-align: left; margin-top: 15px; margin-bottom: 15px; }
     </style>
 </head>
 <body>
@@ -201,149 +161,312 @@
     <div class="glass-panel">
         <div class="stats-label">MANUAL ENTRY</div>
         <input type="number" id="save-amount" placeholder="Enter Amount" inputmode="numeric">
-        <button class="action-btn" onclick="addMoney()">DEPOSIT TO PIGGY BANK</button>
+        <button class="action-btn" onclick="window.addMoney()">DEPOSIT TO PIGGY BANK</button>
     </div>
 
-    <div class="glass-panel log-container" id="history-log">
-        <div class="stats-label">MISSION HISTORY (CLICK TO EDIT)</div>
+    <div class="glass-panel">
+        <div class="history-header">
+            <div class="title-group">
+                <div class="stats-label" id="history-title" style="margin:0;">MISSION HISTORY</div>
+                <span class="today-btn" onclick="window.goToday()" title="Current Month">🎯</span>
+            </div>
+            <div class="view-icons">
+                <span id="list-view-btn" class="active" onclick="window.switchView('list')">☰</span>
+                <span id="cal-view-btn" onclick="window.switchView('calendar')">📅</span>
+            </div>
+        </div>
+        
+        <div id="history-content" class="log-container"></div>
     </div>
 
-    <!-- Goal Modal -->
+    <!-- Modals -->
     <div id="goalModal" class="modal">
         <div class="modal-content">
-            <div class="stats-label">RECONFIGURE TARGET</div>
-            <input type="number" id="new-goal-input" placeholder="New Goal Amount">
-            <button class="action-btn" onclick="updateGoal()">UPDATE MISSION</button>
-            <p style="font-size: 0.7rem; color: #666;">Press ESC to cancel</p>
+            <div class="stats-label">TARGET</div>
+            <input type="number" id="new-goal-input">
+            <button class="action-btn" onclick="window.updateGoal()">UPDATE</button>
         </div>
     </div>
 
-    <!-- Entry Edit Modal -->
     <div id="editModal" class="modal">
         <div class="modal-content">
             <div class="stats-label">EDIT ENTRY</div>
             <input type="number" id="edit-amount-input">
-            <button class="action-btn" onclick="saveEdit()">SAVE CHANGES</button>
-            <button class="action-btn secondary" onclick="deleteEntry()">DELETE ENTRY</button>
-            <p style="font-size: 0.7rem; color: #666;">Press ESC to cancel</p>
+            <button class="action-btn" onclick="window.saveEdit()">SAVE</button>
+            <button class="action-btn secondary" onclick="window.deleteEntry()">DELETE</button>
+        </div>
+    </div>
+
+    <div id="dayModal" class="modal">
+        <div class="modal-content">
+            <div class="stats-label" id="day-modal-title">DATE ENTRIES</div>
+            <div id="day-entries-list" class="log-container"></div>
+            <button class="action-btn" id="add-day-entry-btn">ADD ENTRY FOR THIS DATE</button>
+            <button class="action-btn secondary" onclick="document.getElementById('dayModal').style.display='none'">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="newEntryModal" class="modal">
+        <div class="modal-content">
+            <div class="stats-label" id="new-entry-title">ADD FOR DATE</div>
+            <input type="number" id="new-entry-amount" placeholder="Amount">
+            <button class="action-btn" onclick="window.saveNewEntry()">SAVE</button>
+            <button class="action-btn secondary" onclick="document.getElementById('newEntryModal').style.display='none'">CANCEL</button>
         </div>
     </div>
 
     <script>
-        let totalSaved = 0;
-        let goal = parseFloat(localStorage.getItem('ps5_goal')) || 50000;
-        let editingIndex = -1;
+        (function() {
+            let currentView = 'list';
+            let goal = parseFloat(localStorage.getItem('ps5_goal')) || 50000;
+            let editingIndex = -1;
+            let targetDateStr = '';
+            let calDate = new Date();
+            const mainInputField = document.getElementById('save-amount');
 
-        const inputField = document.getElementById('save-amount');
-        const goalModal = document.getElementById('goalModal');
-        const editModal = document.getElementById('editModal');
+            window.updateUI = function() {
+                let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+                let totalSaved = history.reduce((sum, item) => sum + item.amount, 0);
+                
+                document.getElementById('total-display').innerText = `₹${totalSaved.toLocaleString('en-IN')}`;
+                const percentage = Math.min((totalSaved / goal) * 100, 100);
+                document.getElementById('progress-bar').style.width = percentage + '%';
+                document.getElementById('percent-text').innerText = `${Math.floor(percentage)}% COMPLETE`;
+                document.getElementById('goal-display-label').innerText = `GOAL: ₹${goal.toLocaleString('en-IN')}`;
+                document.getElementById('balance-left').innerText = `BALANCE LEFT: ₹${Math.max(goal - totalSaved, 0).toLocaleString('en-IN')}`;
+                
+                if (currentView === 'list') {
+                    renderList(history);
+                } else {
+                    renderCalendar(history);
+                }
+                if(mainInputField) mainInputField.focus();
+            };
 
-        function updateUI() {
-            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-            totalSaved = history.reduce((sum, item) => sum + item.amount, 0);
-            localStorage.setItem('ps5_saved', totalSaved);
+            window.switchView = function(view) {
+                currentView = view;
+                document.getElementById('list-view-btn').classList.toggle('active', view === 'list');
+                document.getElementById('cal-view-btn').classList.toggle('active', view === 'calendar');
+                window.updateUI();
+            };
 
-            const display = document.getElementById('total-display');
-            display.innerText = `₹${totalSaved.toLocaleString('en-IN')}`;
-            
-            const percentage = Math.min((totalSaved / goal) * 100, 100);
-            document.getElementById('progress-bar').style.width = percentage + '%';
-            document.getElementById('percent-text').innerText = `${Math.floor(percentage)}% COMPLETE`;
-            
-            document.getElementById('goal-display-label').innerText = `GOAL: ₹${goal.toLocaleString('en-IN')}`;
-            const balance = Math.max(goal - totalSaved, 0);
-            document.getElementById('balance-left').innerText = `BALANCE LEFT: ₹${balance.toLocaleString('en-IN')}`;
-            
-            renderHistory(history);
-            inputField.focus(); 
-        }
+            function renderList(history) {
+                const container = document.getElementById('history-content');
+                container.innerHTML = '';
+                if (history.length === 0) {
+                    container.innerHTML = '<div style="color:#666; font-size:0.8rem; text-align:center; padding-top:20px;">No entries yet.</div>';
+                    return;
+                }
+                history.forEach((item, index) => {
+                    const div = document.createElement('div');
+                    div.className = 'log-item';
+                    div.onclick = () => window.openEditModal(index);
+                    div.innerHTML = `<div style="color: #888; font-size: 0.75rem;">${item.timestamp}</div><span style="color: #4caf50; font-weight:bold;">₹${item.amount.toLocaleString('en-IN')}</span>`;
+                    container.appendChild(div);
+                });
+            }
 
-        function addMoney() {
-            const amount = parseFloat(inputField.value);
-            if (amount > 0) {
+            function renderCalendar(history) {
+                const container = document.getElementById('history-content');
+                const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+                
+                let year = calDate.getFullYear();
+                let month = calDate.getMonth();
+                let today = new Date();
+
+                const isAtStart = (year <= 2026 && month <= 0);
+                const isAtEnd = (year >= today.getFullYear() && month >= today.getMonth());
+
+                let html = `
+                    <div class="calendar-nav">
+                        <span class="nav-btn ${isAtStart ? 'disabled' : ''}" onclick="window.changeMonth(-1)">◀</span>
+                        <span>${monthNames[month]} ${year}</span>
+                        <span class="nav-btn ${isAtEnd ? 'disabled' : ''}" onclick="window.changeMonth(1)">▶</span>
+                    </div>
+                    <div class="calendar-grid">
+                        <div class="day-name">S</div><div class="day-name">M</div><div class="day-name">T</div><div class="day-name">W</div><div class="day-name">T</div><div class="day-name">F</div><div class="day-name">S</div>
+                `;
+
+                const firstDay = new Date(year, month, 1).getDay();
+                const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                for (let i = 0; i < firstDay; i++) html += `<div></div>`;
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    const dateStr = `${d.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year}`;
+                    const dailyEntries = history.filter(h => h.timestamp && h.timestamp.split(' | ')[0] === dateStr);
+                    const dayTotal = dailyEntries.reduce((s, e) => s + e.amount, 0);
+
+                    html += `
+                        <div class="day-cell ${dayTotal > 0 ? 'has-data' : ''}" onclick="window.handleDayClick('${dateStr}')">
+                            ${d}${dayTotal > 0 ? `<div class="amount">₹${dayTotal}</div>` : ''}
+                        </div>`;
+                }
+                html += `</div>`;
+                container.innerHTML = html;
+            }
+
+            window.handleDayClick = function(dateStr) {
+                const history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+                const dailyEntries = history.filter(h => h.timestamp && h.timestamp.split(' | ')[0] === dateStr);
+                
+                if (dailyEntries.length > 0) {
+                    window.viewDayEntries(dateStr);
+                } else {
+                    window.openNewEntryModal(dateStr);
+                }
+            };
+
+            window.viewDayEntries = function(dateStr) {
+                const history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+                const dailyEntries = history
+                    .map((item, index) => ({ ...item, originalIndex: index }))
+                    .filter(h => h.timestamp && h.timestamp.split(' | ')[0] === dateStr);
+                
+                const listContainer = document.getElementById('day-entries-list');
+                document.getElementById('day-modal-title').innerText = dateStr;
+                listContainer.innerHTML = '';
+                
+                dailyEntries.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'log-item';
+                    div.onclick = () => {
+                        document.getElementById('dayModal').style.display = 'none';
+                        window.openEditModal(item.originalIndex);
+                    };
+                    div.innerHTML = `<div style="color: #888;">${item.timestamp.split(' | ')[1]}</div><span style="color: #4caf50; font-weight:bold;">₹${item.amount.toLocaleString('en-IN')}</span>`;
+                    listContainer.appendChild(div);
+                });
+                
+                document.getElementById('add-day-entry-btn').onclick = () => {
+                    document.getElementById('dayModal').style.display = 'none';
+                    window.openNewEntryModal(dateStr);
+                };
+                document.getElementById('dayModal').style.display = 'flex';
+            };
+
+            window.openNewEntryModal = function(dateStr) {
+                targetDateStr = dateStr;
+                document.getElementById('new-entry-title').innerText = `ADD FOR ${dateStr}`;
+                const input = document.getElementById('new-entry-amount');
+                input.value = '';
+                document.getElementById('newEntryModal').style.display = 'flex';
+                setTimeout(() => input.focus(), 100);
+            };
+
+            window.saveNewEntry = function() {
+                const val = document.getElementById('new-entry-amount').value;
+                if (!val || val <= 0) return;
+                const amount = parseFloat(val);
                 const now = new Date();
-                const timestamp = `${now.toLocaleDateString('en-IN')} | ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
+                const timestamp = `${targetDateStr} | ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
                 
                 let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+                history.push({ amount, timestamp });
+                history.sort((a, b) => {
+                    const [dateA, timeA] = a.timestamp.split(' | ');
+                    const [dateB, timeB] = b.timestamp.split(' | ');
+                    const dA = new Date(dateA.split('/').reverse().join('-') + 'T' + timeA);
+                    const dB = new Date(dateB.split('/').reverse().join('-') + 'T' + timeB);
+                    return dB - dA;
+                });
+                
+                localStorage.setItem('ps5_history', JSON.stringify(history));
+                document.getElementById('newEntryModal').style.display = 'none';
+                window.updateUI();
+            };
+
+            window.changeMonth = function(offset) {
+                let tempDate = new Date(calDate.getFullYear(), calDate.getMonth() + offset, 1);
+                let today = new Date();
+                if (tempDate.getFullYear() < 2026) return;
+                let currentMonthYear = new Date(today.getFullYear(), today.getMonth(), 1);
+                if (tempDate > currentMonthYear) return;
+                calDate = tempDate;
+                window.updateUI();
+            };
+
+            window.goToday = function() {
+                calDate = new Date();
+                window.updateUI();
+            };
+
+            window.addMoney = function() {
+                const val = mainInputField.value;
+                if (!val || val <= 0) return;
+                const amount = parseFloat(val);
+                const now = new Date();
+                const timestamp = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()} | ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
+                let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
                 history.unshift({ amount, timestamp });
-                
                 localStorage.setItem('ps5_history', JSON.stringify(history));
-                
-                document.getElementById('total-display').classList.add('pulse');
-                setTimeout(() => document.getElementById('total-display').classList.remove('pulse'), 400);
+                mainInputField.value = '';
+                window.updateUI();
+            };
 
-                inputField.value = '';
-                updateUI();
-            }
-        }
+            window.openEditModal = function(i) { 
+                editingIndex = i; 
+                let h = JSON.parse(localStorage.getItem('ps5_history')); 
+                const input = document.getElementById('edit-amount-input');
+                input.value = h[i].amount; 
+                document.getElementById('editModal').style.display = "flex"; 
+                setTimeout(() => input.focus(), 100);
+            };
 
-        function openEditModal(index) {
-            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-            editingIndex = index;
-            document.getElementById('edit-amount-input').value = history[index].amount;
-            editModal.style.display = "flex";
-            document.getElementById('edit-amount-input').focus();
-        }
+            window.saveEdit = function() { 
+                let h = JSON.parse(localStorage.getItem('ps5_history')); 
+                const val = document.getElementById('edit-amount-input').value;
+                if(!val || val <= 0) return;
+                h[editingIndex].amount = parseFloat(val); 
+                localStorage.setItem('ps5_history', JSON.stringify(h)); 
+                document.getElementById('editModal').style.display = "none"; 
+                window.updateUI(); 
+            };
 
-        function saveEdit() {
-            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-            const newAmount = parseFloat(document.getElementById('edit-amount-input').value);
-            if (newAmount >= 0) {
-                history[editingIndex].amount = newAmount;
-                localStorage.setItem('ps5_history', JSON.stringify(history));
-                editModal.style.display = "none";
-                updateUI();
-            }
-        }
+            window.deleteEntry = function() { 
+                let h = JSON.parse(localStorage.getItem('ps5_history')); 
+                h.splice(editingIndex, 1); 
+                localStorage.setItem('ps5_history', JSON.stringify(h)); 
+                document.getElementById('editModal').style.display = "none"; 
+                window.updateUI(); 
+            };
 
-        function deleteEntry() {
-            let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-            history.splice(editingIndex, 1);
-            localStorage.setItem('ps5_history', JSON.stringify(history));
-            editModal.style.display = "none";
-            updateUI();
-        }
+            window.updateGoal = function() { 
+                const val = document.getElementById('new-goal-input').value;
+                if(!val || val <= 0) return;
+                goal = parseFloat(val); 
+                localStorage.setItem('ps5_goal', goal); 
+                document.getElementById('goalModal').style.display = "none"; 
+                window.updateUI(); 
+            };
 
-        function updateGoal() {
-            const val = parseFloat(document.getElementById('new-goal-input').value);
-            if (val > 0) {
-                goal = val;
-                localStorage.setItem('ps5_goal', goal);
-                goalModal.style.display = "none";
-                updateUI();
-            }
-        }
-
-        function renderHistory(history) {
-            const log = document.getElementById('history-log');
-            log.innerHTML = '<div class="stats-label">MISSION HISTORY (CLICK TO EDIT)</div>';
-            if (history.length === 0) log.innerHTML += '<div style="color:#666; font-size:0.8rem; padding-top:10px;">Waiting for first deposit...</div>';
+            window.onload = window.updateUI;
             
-            history.forEach((item, index) => {
-                log.innerHTML += `
-                    <div class="log-item" onclick="openEditModal(${index})">
-                        <div class="log-date">${item.timestamp}</div>
-                        <span style="color: #4caf50; font-weight:bold;">₹${item.amount.toLocaleString('en-IN')}</span>
-                    </div>`;
-            });
-        }
+            // Enter Key handlers for all inputs
+            mainInputField.onkeypress = (e) => { if(e.key === "Enter") window.addMoney(); };
+            document.getElementById('new-entry-amount').onkeypress = (e) => { if(e.key === "Enter") window.saveNewEntry(); };
+            document.getElementById('edit-amount-input').onkeypress = (e) => { if(e.key === "Enter") window.saveEdit(); };
+            document.getElementById('new-goal-input').onkeypress = (e) => { if(e.key === "Enter") window.updateGoal(); };
 
-        window.onload = () => { updateUI(); inputField.focus(); };
-
-        inputField.addEventListener("keypress", (e) => { if (e.key === "Enter") addMoney(); });
-
-        window.addEventListener("keydown", (e) => {
-            if (e.ctrlKey && e.altKey && e.code === "KeyT") {
-                e.preventDefault();
-                goalModal.style.display = "flex";
-                document.getElementById('new-goal-input').focus();
-            }
-            if (e.key === "Escape") {
-                goalModal.style.display = "none";
-                editModal.style.display = "none";
-                inputField.focus();
-            }
-        });
+            window.onkeydown = (e) => {
+                // Ctrl+Alt+T for Goal Setting
+                if (e.ctrlKey && e.altKey && e.code === "KeyT") { 
+                    e.preventDefault(); 
+                    const modal = document.getElementById('goalModal');
+                    const input = document.getElementById('new-goal-input');
+                    modal.style.display = "flex"; 
+                    input.value = goal;
+                    setTimeout(() => input.focus(), 100);
+                }
+                // ESC Key to close any open modal
+                if (e.key === "Escape") { 
+                    document.getElementById('goalModal').style.display = "none"; 
+                    document.getElementById('editModal').style.display = "none"; 
+                    document.getElementById('dayModal').style.display = "none";
+                    document.getElementById('newEntryModal').style.display = "none";
+                }
+            };
+        })();
     </script>
 </body>
 </html>
