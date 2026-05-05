@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PS5 Mission: Spidey Saving Quest</title>
+    <title>ANSH MISSION: PS5</title>
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Montserrat:wght@300;600&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -53,6 +53,7 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.8);
             margin-bottom: 20px;
             box-sizing: border-box;
+            position: relative;
         }
 
         .stats-label {
@@ -85,6 +86,15 @@
             box-shadow: 0 0 15px var(--spidey-red); transition: width 1.2s ease-in-out;
         }
 
+        .balance-highlight {
+            background: var(--spidey-red);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            box-shadow: 0 0 10px rgba(209, 45, 51, 0.5);
+        }
+
         .progress-footer { display: flex; justify-content: space-between; font-size: 0.75rem; font-family: 'Orbitron'; color: #888; }
 
         input[type="number"] {
@@ -100,48 +110,58 @@
         }
 
         .action-btn.secondary { background: #444; box-shadow: 0 4px 0 #222; }
+        .action-btn.danger { background: #b30000; box-shadow: 0 4px 0 #660000; }
         .action-btn:active { transform: translateY(3px); box-shadow: 0 1px 0 #8b0000; }
+
+        .mobile-plus {
+            position: absolute;
+            top: 15px; right: 15px;
+            background: var(--spidey-red);
+            width: 35px; height: 35px;
+            border-radius: 50%;
+            display: none; justify-content: center; align-items: center;
+            font-weight: bold; font-size: 1.5rem; cursor: pointer;
+            box-shadow: 0 0 10px var(--spidey-red); z-index: 5;
+        }
 
         .history-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
         .title-group { display: flex; align-items: center; gap: 10px; }
         .view-icons span { cursor: pointer; font-size: 1.2rem; margin-left: 10px; opacity: 0.5; transition: 0.3s; }
         .view-icons span.active { opacity: 1; color: var(--spidey-red); text-shadow: 0 0 5px var(--spidey-red); }
 
-        .today-btn { cursor: pointer; font-size: 1.1rem; filter: grayscale(1); transition: 0.2s; }
-        .today-btn:hover { filter: grayscale(0); transform: scale(1.1); }
+        .today-btn { cursor: pointer; font-size: 1.1rem; transition: 0.2s; filter: grayscale(1); }
+        .today-btn.highlight { filter: grayscale(0); transform: scale(1.15); }
 
-        /* CALENDAR CSS */
-        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-family: 'Orbitron'; font-size: 0.8rem; }
-        .nav-btn { cursor: pointer; background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 5px; }
-        .nav-btn.disabled { opacity: 0.15; cursor: not-allowed; }
-        
-        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; text-align: center; }
-        .day-name { font-size: 0.6rem; color: var(--spidey-red); font-weight: bold; padding-bottom: 5px; }
+        .calendar-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-family: 'Orbitron'; font-size: 0.85rem; }
+        .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
         .day-cell { 
-            background: rgba(255,255,255,0.05); aspect-ratio: 1/1; border-radius: 4px; 
-            display: flex; flex-direction: column; justify-content: center; align-items: center; font-size: 0.7rem; 
-            border: 1px solid transparent; cursor: pointer;
+            background: rgba(255,255,255,0.05); aspect-ratio: 1/1; border-radius: 6px; 
+            display: flex; flex-direction: column; justify-content: center; align-items: center; 
+            font-size: 0.75rem; border: 1px solid transparent; cursor: pointer;
         }
-        .day-cell:hover { background: rgba(255,255,255,0.1); border-color: rgba(255,255,255,0.2); }
         .day-cell.has-data { border-color: rgba(76, 175, 80, 0.4); background: rgba(76, 175, 80, 0.1); }
-        .day-cell.has-data:hover { background: rgba(76, 175, 80, 0.2); }
-        .day-cell .amount { font-size: 0.5rem; color: #4caf50; font-weight: bold; margin-top: 2px; }
+        .day-cell.today { border-color: var(--spidey-red); background: rgba(209, 45, 51, 0.1); }
+        .day-amount { font-size: 0.5rem; color: #4caf50; font-weight: bold; margin-top: 2px; }
 
         .modal { display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.9); justify-content: center; align-items: center; padding: 20px; box-sizing: border-box; }
         .modal-content { background: var(--glass-bg); border: 2px solid var(--spidey-red); padding: 30px; border-radius: 20px; text-align: center; width: 100%; max-width: 350px; }
 
-        .log-container { max-height: 250px; overflow-y: auto; scrollbar-width: thin; }
+        .log-container { max-height: 250px; overflow-y: auto; }
         .log-item { display: flex; justify-content: space-between; padding: 12px 5px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; cursor: pointer; }
-        
-        #day-entries-list { text-align: left; margin-top: 15px; margin-bottom: 15px; }
+
+        @media (max-width: 600px) {
+            #desktop-entry { display: none; }
+            .mobile-plus { display: flex; }
+        }
     </style>
 </head>
 <body>
 
-    <h1>MISSION: PS5</h1>
+    <h1>ANSH MISSION: PS5</h1>
 
     <div class="glass-panel">
-        <div class="stats-label">COLLECTED CURRENCY</div>
+        <div class="mobile-plus" onclick="window.openManualEntry()">+</div>
+        <div class="stats-label">COLLECTED FOR MY PS5</div>
         <div class="current-saved" id="total-display">₹0</div>
         
         <div class="progress-header">
@@ -154,12 +174,12 @@
         </div>
 
         <div class="progress-footer">
-            <span id="balance-left">BALANCE LEFT: ₹50,000</span>
+            <span>BALANCE LEFT: <span id="balance-left" class="balance-highlight">₹50,000</span></span>
         </div>
     </div>
 
-    <div class="glass-panel">
-        <div class="stats-label">MANUAL ENTRY</div>
+    <div class="glass-panel" id="desktop-entry">
+        <div class="stats-label">AMOUNT TO SAVE</div>
         <input type="number" id="save-amount" placeholder="Enter Amount" inputmode="numeric">
         <button class="action-btn" onclick="window.addMoney()">DEPOSIT TO PIGGY BANK</button>
     </div>
@@ -167,24 +187,34 @@
     <div class="glass-panel">
         <div class="history-header">
             <div class="title-group">
-                <div class="stats-label" id="history-title" style="margin:0;">MISSION HISTORY</div>
-                <span class="today-btn" onclick="window.goToday()" title="Current Month">🎯</span>
+                <div class="stats-label" style="margin:0;">MISSION HISTORY</div>
+                <span id="today-btn" class="today-btn" onclick="window.goToday()">🎯</span>
             </div>
             <div class="view-icons">
                 <span id="list-view-btn" class="active" onclick="window.switchView('list')">☰</span>
                 <span id="cal-view-btn" onclick="window.switchView('calendar')">📅</span>
             </div>
         </div>
-        
         <div id="history-content" class="log-container"></div>
     </div>
 
     <!-- Modals -->
-    <div id="goalModal" class="modal">
+    <div id="manualEntryModal" class="modal">
         <div class="modal-content">
-            <div class="stats-label">TARGET</div>
-            <input type="number" id="new-goal-input">
-            <button class="action-btn" onclick="window.updateGoal()">UPDATE</button>
+            <div class="stats-label" id="entry-modal-title">AMOUNT TO SAVE</div>
+            <p id="entry-date-label" style="font-size:0.7rem; color:#aaa; margin-top:-5px; margin-bottom:10px;"></p>
+            <input type="number" id="mobile-save-amount" placeholder="Enter Amount" inputmode="numeric">
+            <button class="action-btn" onclick="window.addMoneyMobile()">DEPOSIT</button>
+            <button class="action-btn secondary" onclick="document.getElementById('manualEntryModal').style.display='none'">CLOSE</button>
+        </div>
+    </div>
+
+    <div id="confirmDeleteModal" class="modal">
+        <div class="modal-content">
+            <div class="stats-label">CONFIRM DELETE</div>
+            <p style="font-size: 0.9rem; margin-bottom: 20px;">Are you sure you want to delete this mission entry?</p>
+            <button class="action-btn danger" onclick="window.executeDelete()">YES, DELETE</button>
+            <button class="action-btn secondary" onclick="document.getElementById('confirmDeleteModal').style.display='none'">CANCEL</button>
         </div>
     </div>
 
@@ -193,7 +223,7 @@
             <div class="stats-label">EDIT ENTRY</div>
             <input type="number" id="edit-amount-input">
             <button class="action-btn" onclick="window.saveEdit()">SAVE</button>
-            <button class="action-btn secondary" onclick="window.deleteEntry()">DELETE</button>
+            <button class="action-btn secondary" onclick="window.requestDelete()">DELETE</button>
         </div>
     </div>
 
@@ -201,28 +231,17 @@
         <div class="modal-content">
             <div class="stats-label" id="day-modal-title">DATE ENTRIES</div>
             <div id="day-entries-list" class="log-container"></div>
-            <button class="action-btn" id="add-day-entry-btn">ADD ENTRY FOR THIS DATE</button>
             <button class="action-btn secondary" onclick="document.getElementById('dayModal').style.display='none'">CLOSE</button>
-        </div>
-    </div>
-
-    <div id="newEntryModal" class="modal">
-        <div class="modal-content">
-            <div class="stats-label" id="new-entry-title">ADD FOR DATE</div>
-            <input type="number" id="new-entry-amount" placeholder="Amount">
-            <button class="action-btn" onclick="window.saveNewEntry()">SAVE</button>
-            <button class="action-btn secondary" onclick="document.getElementById('newEntryModal').style.display='none'">CANCEL</button>
         </div>
     </div>
 
     <script>
         (function() {
             let currentView = 'list';
-            let goal = parseFloat(localStorage.getItem('ps5_goal')) || 50000;
+            let goal = 50000;
             let editingIndex = -1;
-            let targetDateStr = '';
             let calDate = new Date();
-            const mainInputField = document.getElementById('save-amount');
+            let selectedDateOverride = null;
 
             window.updateUI = function() {
                 let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
@@ -232,177 +251,116 @@
                 const percentage = Math.min((totalSaved / goal) * 100, 100);
                 document.getElementById('progress-bar').style.width = percentage + '%';
                 document.getElementById('percent-text').innerText = `${Math.floor(percentage)}% COMPLETE`;
-                document.getElementById('goal-display-label').innerText = `GOAL: ₹${goal.toLocaleString('en-IN')}`;
-                document.getElementById('balance-left').innerText = `BALANCE LEFT: ₹${Math.max(goal - totalSaved, 0).toLocaleString('en-IN')}`;
+                document.getElementById('balance-left').innerText = `₹${Math.max(goal - totalSaved, 0).toLocaleString('en-IN')}`;
                 
-                if (currentView === 'list') {
-                    renderList(history);
-                } else {
-                    renderCalendar(history);
-                }
-                if(mainInputField) mainInputField.focus();
-            };
+                document.getElementById('list-view-btn').className = currentView === 'list' ? 'active' : '';
+                document.getElementById('cal-view-btn').className = currentView === 'calendar' ? 'active' : '';
 
-            window.switchView = function(view) {
-                currentView = view;
-                document.getElementById('list-view-btn').classList.toggle('active', view === 'list');
-                document.getElementById('cal-view-btn').classList.toggle('active', view === 'calendar');
-                window.updateUI();
+                const realToday = new Date();
+                const isCurrentMonth = calDate.getMonth() === realToday.getMonth() && calDate.getFullYear() === realToday.getFullYear();
+                document.getElementById('today-btn').classList.toggle('highlight', !isCurrentMonth);
+
+                if (currentView === 'list') renderList(history);
+                else renderCalendar(history);
             };
 
             function renderList(history) {
                 const container = document.getElementById('history-content');
-                container.innerHTML = '';
-                if (history.length === 0) {
-                    container.innerHTML = '<div style="color:#666; font-size:0.8rem; text-align:center; padding-top:20px;">No entries yet.</div>';
-                    return;
-                }
+                container.innerHTML = history.length === 0 ? '<div style="color:#666; font-size:0.8rem; text-align:center; padding-top:20px;">No entries.</div>' : '';
                 history.forEach((item, index) => {
                     const div = document.createElement('div');
                     div.className = 'log-item';
                     div.onclick = () => window.openEditModal(index);
-                    div.innerHTML = `<div style="color: #888; font-size: 0.75rem;">${item.timestamp}</div><span style="color: #4caf50; font-weight:bold;">₹${item.amount.toLocaleString('en-IN')}</span>`;
+                    div.innerHTML = `<div>${item.timestamp}</div><span style="color: #4caf50;">₹${item.amount.toLocaleString('en-IN')}</span>`;
                     container.appendChild(div);
                 });
             }
 
             function renderCalendar(history) {
                 const container = document.getElementById('history-content');
-                const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+                const month = calDate.getMonth();
+                const year = calDate.getFullYear();
+                const monthName = new Intl.DateTimeFormat('en-US', { month: 'long' }).format(calDate);
                 
-                let year = calDate.getFullYear();
-                let month = calDate.getMonth();
-                let today = new Date();
-
-                const isAtStart = (year <= 2026 && month <= 0);
-                const isAtEnd = (year >= today.getFullYear() && month >= today.getMonth());
-
-                let html = `
-                    <div class="calendar-nav">
-                        <span class="nav-btn ${isAtStart ? 'disabled' : ''}" onclick="window.changeMonth(-1)">◀</span>
-                        <span>${monthNames[month]} ${year}</span>
-                        <span class="nav-btn ${isAtEnd ? 'disabled' : ''}" onclick="window.changeMonth(1)">▶</span>
-                    </div>
-                    <div class="calendar-grid">
-                        <div class="day-name">S</div><div class="day-name">M</div><div class="day-name">T</div><div class="day-name">W</div><div class="day-name">T</div><div class="day-name">F</div><div class="day-name">S</div>
-                `;
-
+                let html = `<div class="calendar-nav">
+                    <span onclick="window.changeMonth(-1)" style="cursor:pointer; padding:5px">◀</span>
+                    <span>${monthName.toUpperCase()} ${year}</span>
+                    <span onclick="window.changeMonth(1)" style="cursor:pointer; padding:5px">▶</span>
+                </div><div class="calendar-grid">`;
+                
                 const firstDay = new Date(year, month, 1).getDay();
                 const daysInMonth = new Date(year, month + 1, 0).getDate();
 
                 for (let i = 0; i < firstDay; i++) html += `<div></div>`;
-
+                
                 for (let d = 1; d <= daysInMonth; d++) {
                     const dateStr = `${d.toString().padStart(2, '0')}/${(month + 1).toString().padStart(2, '0')}/${year}`;
-                    const dailyEntries = history.filter(h => h.timestamp && h.timestamp.split(' | ')[0] === dateStr);
-                    const dayTotal = dailyEntries.reduce((s, e) => s + e.amount, 0);
-
+                    const dayEntries = history.filter(item => item.timestamp.split(' | ')[0] === dateStr);
+                    const dayTotal = dayEntries.reduce((sum, item) => sum + item.amount, 0);
+                    const isToday = new Date().toLocaleDateString('en-GB') === dateStr;
+                    
                     html += `
-                        <div class="day-cell ${dayTotal > 0 ? 'has-data' : ''}" onclick="window.handleDayClick('${dateStr}')">
-                            ${d}${dayTotal > 0 ? `<div class="amount">₹${dayTotal}</div>` : ''}
+                        <div class="day-cell ${dayEntries.length ? 'has-data' : ''} ${isToday ? 'today' : ''}" onclick="window.handleCellClick('${dateStr}')">
+                            <span>${d}</span>
+                            ${dayTotal > 0 ? `<span class="day-amount">₹${dayTotal >= 1000 ? (dayTotal/1000).toFixed(1) + 'k' : dayTotal}</span>` : ''}
                         </div>`;
                 }
                 html += `</div>`;
                 container.innerHTML = html;
             }
 
-            window.handleDayClick = function(dateStr) {
+            window.handleCellClick = (dateStr) => {
                 const history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-                const dailyEntries = history.filter(h => h.timestamp && h.timestamp.split(' | ')[0] === dateStr);
-                
-                if (dailyEntries.length > 0) {
-                    window.viewDayEntries(dateStr);
-                } else {
-                    window.openNewEntryModal(dateStr);
-                }
+                const dayEntries = history.filter(item => item.timestamp.split(' | ')[0] === dateStr);
+                if (dayEntries.length > 0) window.showDayDetail(dateStr);
+                else window.openManualEntry(dateStr);
             };
 
-            window.viewDayEntries = function(dateStr) {
+            window.showDayDetail = (dateStr) => {
                 const history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-                const dailyEntries = history
-                    .map((item, index) => ({ ...item, originalIndex: index }))
-                    .filter(h => h.timestamp && h.timestamp.split(' | ')[0] === dateStr);
-                
-                const listContainer = document.getElementById('day-entries-list');
-                document.getElementById('day-modal-title').innerText = dateStr;
-                listContainer.innerHTML = '';
-                
-                dailyEntries.forEach(item => {
+                const dayEntries = history.map((item, index) => ({...item, originalIndex: index}))
+                                         .filter(item => item.timestamp.split(' | ')[0] === dateStr);
+                const list = document.getElementById('day-entries-list');
+                list.innerHTML = '';
+                dayEntries.forEach(item => {
                     const div = document.createElement('div');
                     div.className = 'log-item';
-                    div.onclick = () => {
-                        document.getElementById('dayModal').style.display = 'none';
-                        window.openEditModal(item.originalIndex);
-                    };
-                    div.innerHTML = `<div style="color: #888;">${item.timestamp.split(' | ')[1]}</div><span style="color: #4caf50; font-weight:bold;">₹${item.amount.toLocaleString('en-IN')}</span>`;
-                    listContainer.appendChild(div);
+                    div.onclick = () => { document.getElementById('dayModal').style.display='none'; window.openEditModal(item.originalIndex); };
+                    div.innerHTML = `<div>${item.timestamp.split(' | ')[1]}</div><span style="color:#4caf50;">₹${item.amount.toLocaleString('en-IN')}</span>`;
+                    list.appendChild(div);
                 });
-                
-                document.getElementById('add-day-entry-btn').onclick = () => {
-                    document.getElementById('dayModal').style.display = 'none';
-                    window.openNewEntryModal(dateStr);
-                };
+                document.getElementById('day-modal-title').innerText = dateStr;
                 document.getElementById('dayModal').style.display = 'flex';
             };
 
-            window.openNewEntryModal = function(dateStr) {
-                targetDateStr = dateStr;
-                document.getElementById('new-entry-title').innerText = `ADD FOR ${dateStr}`;
-                const input = document.getElementById('new-entry-amount');
-                input.value = '';
-                document.getElementById('newEntryModal').style.display = 'flex';
-                setTimeout(() => input.focus(), 100);
-            };
-
-            window.saveNewEntry = function() {
-                const val = document.getElementById('new-entry-amount').value;
-                if (!val || val <= 0) return;
-                const amount = parseFloat(val);
-                const now = new Date();
-                const timestamp = `${targetDateStr} | ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
-                
-                let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-                history.push({ amount, timestamp });
-                history.sort((a, b) => {
-                    const [dateA, timeA] = a.timestamp.split(' | ');
-                    const [dateB, timeB] = b.timestamp.split(' | ');
-                    const dA = new Date(dateA.split('/').reverse().join('-') + 'T' + timeA);
-                    const dB = new Date(dateB.split('/').reverse().join('-') + 'T' + timeB);
-                    return dB - dA;
-                });
-                
-                localStorage.setItem('ps5_history', JSON.stringify(history));
-                document.getElementById('newEntryModal').style.display = 'none';
-                window.updateUI();
-            };
-
-            window.changeMonth = function(offset) {
-                let tempDate = new Date(calDate.getFullYear(), calDate.getMonth() + offset, 1);
-                let today = new Date();
-                if (tempDate.getFullYear() < 2026) return;
-                let currentMonthYear = new Date(today.getFullYear(), today.getMonth(), 1);
-                if (tempDate > currentMonthYear) return;
-                calDate = tempDate;
-                window.updateUI();
-            };
-
-            window.goToday = function() {
-                calDate = new Date();
-                window.updateUI();
+            window.openManualEntry = function(specificDate = null) {
+                selectedDateOverride = specificDate;
+                document.getElementById('entry-date-label').innerText = specificDate ? `Date: ${specificDate}` : "";
+                document.getElementById('manualEntryModal').style.display = 'flex';
+                setTimeout(() => document.getElementById('mobile-save-amount').focus(), 100);
             };
 
             window.addMoney = function() {
-                const val = mainInputField.value;
-                if (!val || val <= 0) return;
-                const amount = parseFloat(val);
-                const now = new Date();
-                const timestamp = `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()} | ${now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' })}`;
-                let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
-                history.unshift({ amount, timestamp });
-                localStorage.setItem('ps5_history', JSON.stringify(history));
-                mainInputField.value = '';
-                window.updateUI();
+                saveEntry(document.getElementById('save-amount').value);
+                document.getElementById('save-amount').value = '';
             };
+
+            window.addMoneyMobile = function() {
+                saveEntry(document.getElementById('mobile-save-amount').value, selectedDateOverride);
+                document.getElementById('manualEntryModal').style.display = 'none';
+                document.getElementById('mobile-save-amount').value = '';
+            };
+
+            function saveEntry(val, dateStr = null) {
+                if (!val || val <= 0) return;
+                const now = new Date();
+                const timeStr = now.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+                const finalDate = dateStr || `${now.getDate().toString().padStart(2, '0')}/${(now.getMonth()+1).toString().padStart(2, '0')}/${now.getFullYear()}`;
+                let history = JSON.parse(localStorage.getItem('ps5_history')) || [];
+                history.unshift({ amount: parseFloat(val), timestamp: `${finalDate} | ${timeStr}` });
+                localStorage.setItem('ps5_history', JSON.stringify(history));
+                window.updateUI();
+            }
 
             window.openEditModal = function(i) { 
                 editingIndex = i; 
@@ -415,57 +373,32 @@
 
             window.saveEdit = function() { 
                 let h = JSON.parse(localStorage.getItem('ps5_history')); 
-                const val = document.getElementById('edit-amount-input').value;
-                if(!val || val <= 0) return;
-                h[editingIndex].amount = parseFloat(val); 
+                h[editingIndex].amount = parseFloat(document.getElementById('edit-amount-input').value); 
                 localStorage.setItem('ps5_history', JSON.stringify(h)); 
                 document.getElementById('editModal').style.display = "none"; 
                 window.updateUI(); 
             };
 
-            window.deleteEntry = function() { 
+            window.executeDelete = function() {
                 let h = JSON.parse(localStorage.getItem('ps5_history')); 
                 h.splice(editingIndex, 1); 
                 localStorage.setItem('ps5_history', JSON.stringify(h)); 
-                document.getElementById('editModal').style.display = "none"; 
+                document.getElementById('confirmDeleteModal').style.display = "none"; 
                 window.updateUI(); 
             };
 
-            window.updateGoal = function() { 
-                const val = document.getElementById('new-goal-input').value;
-                if(!val || val <= 0) return;
-                goal = parseFloat(val); 
-                localStorage.setItem('ps5_goal', goal); 
-                document.getElementById('goalModal').style.display = "none"; 
-                window.updateUI(); 
-            };
+            window.changeMonth = (dir) => { calDate.setMonth(calDate.getMonth() + dir); window.updateUI(); };
+            window.goToday = () => { calDate = new Date(); window.updateUI(); };
+            window.switchView = (view) => { currentView = view; window.updateUI(); };
+            window.requestDelete = () => { document.getElementById('editModal').style.display = 'none'; document.getElementById('confirmDeleteModal').style.display = 'flex'; };
+
+            // Enter key event listeners
+            document.getElementById('save-amount').addEventListener('keypress', (e) => { if(e.key === 'Enter') window.addMoney(); });
+            document.getElementById('mobile-save-amount').addEventListener('keypress', (e) => { if(e.key === 'Enter') window.addMoneyMobile(); });
+            document.getElementById('edit-amount-input').addEventListener('keypress', (e) => { if(e.key === 'Enter') window.saveEdit(); });
 
             window.onload = window.updateUI;
-            
-            // Enter Key handlers for all inputs
-            mainInputField.onkeypress = (e) => { if(e.key === "Enter") window.addMoney(); };
-            document.getElementById('new-entry-amount').onkeypress = (e) => { if(e.key === "Enter") window.saveNewEntry(); };
-            document.getElementById('edit-amount-input').onkeypress = (e) => { if(e.key === "Enter") window.saveEdit(); };
-            document.getElementById('new-goal-input').onkeypress = (e) => { if(e.key === "Enter") window.updateGoal(); };
-
-            window.onkeydown = (e) => {
-                // Ctrl+Alt+T for Goal Setting
-                if (e.ctrlKey && e.altKey && e.code === "KeyT") { 
-                    e.preventDefault(); 
-                    const modal = document.getElementById('goalModal');
-                    const input = document.getElementById('new-goal-input');
-                    modal.style.display = "flex"; 
-                    input.value = goal;
-                    setTimeout(() => input.focus(), 100);
-                }
-                // ESC Key to close any open modal
-                if (e.key === "Escape") { 
-                    document.getElementById('goalModal').style.display = "none"; 
-                    document.getElementById('editModal').style.display = "none"; 
-                    document.getElementById('dayModal').style.display = "none";
-                    document.getElementById('newEntryModal').style.display = "none";
-                }
-            };
+            window.onkeydown = (e) => { if (e.key === "Escape") document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); };
         })();
     </script>
 </body>
